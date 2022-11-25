@@ -1,72 +1,97 @@
-
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.event.*;
 
-public class Window implements ActionListener {
-    JFrame frame = new JFrame("File");
-    JButton btn1 = new JButton("Button 1");
-    JButton btn2 = new JButton("Button 2");
-    JTextArea text = new JTextArea();
-    JMenuBar bar = new JMenuBar();
-    JMenu file = new JMenu("File"), edit = new JMenu("Edit"), help = new JMenu("Help");
-    JMenuItem fSave = new JMenuItem("Save"), fClose = new JMenuItem("Close"), eCopy = new JMenuItem("Copy"), eCut = new JMenuItem("Cut"), ePaste = new JMenuItem("Paste");
-    JPanel[] pan = new JPanel[2];
+public class Window implements MouseListener {
+    JFrame frame = new JFrame("Regions");
+    JPanel north = new JPanel();
+    JPanel south = new JPanel();
+    JPanel west = new JPanel();
+    JPanel east = new JPanel();
+    JPanel center = new JPanel();
+    JPanel[] regions = new JPanel[]{north, south, east, west, center};
+    RegionDialog dial = new RegionDialog(frame);
     Window() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        GridLayout gl = new GridLayout(2,1);
-        for (int i = 0; i<2; i++) {pan[i] = new JPanel(); pan[i].setLayout(new FlowLayout()); frame.add(pan[i]);}
-        frame.setLayout(gl);
-        file.add(fSave);file.add(fClose);
-        edit.add(eCopy); edit.add(eCut); edit.add(ePaste);
-        bar.add(file); bar.add(edit); bar.add(help);
-        fSave.addActionListener(this);
-        fClose.addActionListener(this);
-        eCopy.addActionListener(this);
-        eCut.addActionListener(this);
-        ePaste.addActionListener(this);
-        //btn1.setSize(20, 30);
-        //btn2.setSize(20, 30);
-        //gl.setHgap(20);
-        //gl.setVgap(20);
-        pan[0].add(btn1); pan[0].add(btn2);
-        //gl.setHgap(0);
-        //gl.setVgap(0);
-        text = new JTextArea(10,40);
-        text.setLineWrap(true);
-        //text.set
-        JScrollPane areaScrollPane = new JScrollPane(text);
-        areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        pan[1].add(text);
-        frame.setJMenuBar(bar);
-        frame.setSize(new Dimension(500, 400));
+        frame.setAlwaysOnTop(true);
+        frame. setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        frame.setSize(500,  500);
+        north.setBackground(Color.lightGray);
+        south.setBackground(Color.cyan);
+        east.setBackground(Color.PINK);
+        west.setBackground(Color.YELLOW);
+        center.setBackground(Color.ORANGE);
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 4;
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        frame.add(north, c);
+        //c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        frame.add(west, c);
+        c.gridx = 2;
+        c.gridy = 1;
+        frame.add(center, c);
+        c.gridx = 3;
+        c.gridy = 1;
+        frame.add(east, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 4;
+        frame.add(south, c);
+        frame.setEnabled(true);
+        for (JPanel pane : regions) pane.addMouseListener(this);
         frame.setVisible(true);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-        if (source == fSave) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("newfile.txt"))) {
-                writer.write(text.getText());
-                System.out.println("File was saved to this project's folder and is named newfile.txt. No, you do not get to choose.");
-            } catch (IOException i) {
-                System.out.println("Cannot write file...");
-            }
-        }
-        else if (e.getSource() == fClose) frame.dispose();
-        else if (source == eCopy) text.copy();
-        else if (source == eCut) text.cut();
-        else if (source == ePaste) text.paste();
-        else if (source == help) JOptionPane.showMessageDialog(null, "There is no help here, only suffering","Help",JOptionPane.INFORMATION_MESSAGE);
+    public void mouseClicked(MouseEvent e) {
+
     }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        if (e.getSource() == north) {
+            dial.text.setText("Добро пожаловать в САО");
+            dial.setVisible(true);
+        }
+        if (e.getSource() == south) {
+            dial.text.setText("Добро пожаловать в ЮАО");
+            dial.setVisible(true);
+        }
+        if (e.getSource() == west) {
+            dial.text.setText("Добро пожаловать в ЗАО");
+            dial.setVisible(true);
+        }
+        if (e.getSource() == east) {
+            dial.text.setText("Добро пожаловать в ВАО");
+            dial.setVisible(true);
+        }
+        if (e.getSource() == center) {
+            dial.text.setText("Добро пожаловать в ЦАО");
+            dial.setVisible(true);
+        }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
     public static void main(String[] args) {
         new Window();
     }
